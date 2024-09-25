@@ -1,0 +1,46 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name as needed
+    paths:
+      - '**/*.tf' # Trigger on changes to Terraform files
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0  # Replace with your desired Terraform version
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+
+      # Format Terraform files
+      - name: Terraform Format
+        run: terraform fmt -check -diff
+
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Run Terraform Plan
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out=tfplan
+
+      # Apply Terraform configuration (optional: restrict this to specific branches or require approval)
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'  # Run on 'main' branch only
+        run: terraform apply -auto-approve tfplan
