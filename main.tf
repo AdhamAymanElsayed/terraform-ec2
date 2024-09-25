@@ -9,14 +9,14 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"  # Change to your desired region
+  region = "us-east-1" # Change to your desired region
 }
 
 resource "aws_instance" "example" {
-  ami           = "ami-0531a8de51635a5c8"  
+  ami           = "ami-0531a8de51635a5c8"
   instance_type = "t2.micro"
 
   tags = {
-    Name = "KiwiInstance"
+    Name = "Kiwi"
   }
 }
